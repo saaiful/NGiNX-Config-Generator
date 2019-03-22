@@ -1,0 +1,66 @@
+server {
+	listen 80;
+	server_name #DOMAINS#;
+	root #ROOT#;
+
+	index index.html index.htm index.php;
+
+	charset utf-8;
+
+	location ~ \.php$ {
+		fastcgi_pass #PHP#;
+		fastcgi_index index.php;
+		fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+		include fastcgi_params;
+	}
+
+	location = /favicon.ico { access_log off; log_not_found off; }
+	location = /robots.txt  { access_log off; log_not_found off; }
+
+	error_page 404 /index.php;
+
+	location / {
+		try_files $uri $uri/ /index.php?$query_string;
+	}
+
+	# WordPress: allow TinyMCE
+	location = /wp-includes/js/tinymce/wp-tinymce.php {
+		include nginxconfig.io/php_fastcgi.conf;
+	}
+
+	# WordPress: deny wp-content, wp-includes php files
+	location ~* ^/(?:wp-content|wp-includes)/.*\.php$ {
+		deny all;
+	}
+
+	# WordPress: deny wp-content/uploads nasty stuff
+	location ~* ^/wp-content/uploads/.*\.(?:s?html?|php|js|swf)$ {
+		deny all;
+	}
+
+	# WordPress: deny wp-content/plugins (except earlier rules)
+	location ~ ^/wp-content/plugins {
+		deny all;
+	}
+
+	# WordPress: deny scripts and styles concat
+	location ~* \/wp-admin\/load-(?:scripts|styles)\.php {
+		deny all;
+	}
+
+	# WordPress: deny general stuff
+	location ~* ^/(?:xmlrpc\.php|wp-links-opml\.php|wp-config\.php|wp-config-sample\.php|wp-comments-post\.php|readme\.html|license\.txt)$ {
+		deny all;
+	}
+
+	# Security Setting
+	add_header X-Frame-Options "SAMEORIGIN";
+	add_header X-XSS-Protection "1; mode=block";
+	add_header X-Content-Type-Options "nosniff";
+	location ~ /\.(?!well-known).* {
+		deny all;
+	}
+
+	#CACHE#
+	#GZIP#
+}

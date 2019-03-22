@@ -1,0 +1,54 @@
+server {
+	listen 80;
+	server_name #DOMAINS#;
+	root #ROOT#;
+
+	index index.html index.htm;
+
+	charset utf-8;
+
+	location ~ \.php$ {
+		fastcgi_pass #PHP#;
+		fastcgi_index index.php;
+		fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+		include fastcgi_params;
+	}
+
+	location / {
+		try_files $uri $uri/ /index.php?$query_string;
+	}
+
+	# Drupal: deny private files
+	location ~ ^/sites/.*/private/ {
+		deny all;
+	}
+
+	# Drupal: deny php in files
+	location ~ ^/sites/[^/]+/files/.*\.php$ {
+		deny all;
+	}
+
+	# Drupal: deny php in vendor
+	location ~ /vendor/.*\.php$ {
+		deny all;
+	}
+
+	# Drupal: handle private files
+	location ~ ^(/[a-z\-]+)?/system/files/ {
+		try_files $uri /index.php?$query_string;
+	}
+
+	location = /favicon.ico { access_log off; log_not_found off; }
+	location = /robots.txt  { access_log off; log_not_found off; }
+
+	# Security Setting
+	add_header X-Frame-Options "SAMEORIGIN";
+	add_header X-XSS-Protection "1; mode=block";
+	add_header X-Content-Type-Options "nosniff";
+	location ~ /\.(?!well-known).* {
+		deny all;
+	}
+
+	#CACHE#
+	#GZIP#
+}

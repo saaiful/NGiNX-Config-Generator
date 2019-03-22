@@ -1,0 +1,7 @@
+[
+	{"php5": "unix:/var/run/php5-fpm.sock"},
+	{"php7.0": "unix:/var/run/php/php7.0-fpm.sock"},
+	{"php7.1": "unix:/var/run/php/php7.1-fpm.sock"},
+	{"php7.2": "unix:/var/run/php/php7.2-fpm.sock"},
+	{"php7.3": "unix:/var/run/php/php7.3-fpm.sock"},
+]

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Download and save config
+sudo wget -O /etc/nginx/sites-available/#DOMAIN#.conf "#URL#"
+
+# Create Document Root and Set Permission
+sudo mkdir -p "#ROOT#"
+
+sudo chown www-data:www-data "#ROOT#"
+
+# Virtual host: create symbolic links
+sudo ln -s /etc/nginx/sites-available/#DOMAIN#.conf /etc/nginx/sites-enabled
+
+# NGiNX test & restart
+sudo nginx -t && service nginx restart
+
+# SSL - certbot: obtain certificates
+# sudo mkdir -p "/var/www/_letsencrypt"
+# certbot certonly --webroot -d #DOMAIN# -d www.#DOMAIN# --email info@#DOMAIN# -w /var/www/_letsencrypt -n --agree-tos --force-renewal
