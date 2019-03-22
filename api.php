@@ -25,7 +25,7 @@ if (isset($_REQUEST['app'])) {
         $domains = implode(" ", $domains);
     }
     $set_2 = [$domains, $domain, @$_REQUEST['root'], $php, $cache, $gzip, @$_REQUEST['port']];
-    $confs = ['laravel', 'wordpress', 'js-front', 'node', 'django', 'durpal'];
+    $confs = ['laravel', 'wordpress', 'js-front', 'node', 'django', 'durpal', 'php'];
     $type = (@$_REQUEST['type'] == 'sh') ? 'sh' : 'conf';
     if (in_array($_REQUEST['app'], $confs)) {
         $template = str_replace("\r", '', file_get_contents('templates/' . $_REQUEST['app'] . '.txt'));

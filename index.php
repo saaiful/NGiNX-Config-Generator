@@ -15,7 +15,10 @@
 			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
 			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 		<![endif]-->
-		<style type="text/css">pre{-webkit-user-select: all;user-select: all;}</style>
+		<style type="text/css">
+			pre{-webkit-user-select: all;user-select: all;}
+			#_node{display: none;}
+		</style>
 	</head>
 	<body>
 		<div class="container">
@@ -40,6 +43,8 @@
 						<div class="form-group">
 							<label for="app">Select App *</label>
 							<select type="text" id="app" name="app" class="form-control" required>
+								<option value="">No App</option>
+								<option value="php">Basic PHP</option>
 								<option value="wordpress">WordPress</option>
 								<option value="laravel">Laravel</option>
 								<option value="js-front">JS/Html</option>
@@ -49,7 +54,7 @@
 							</select>
 						</div>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-3" id="_php">
 						<div class="form-group">
 							<label for="php">PHP *</label>
 							<select type="text" id="php" name="php" class="form-control" required>
@@ -60,6 +65,12 @@
 								<option value="php7.2">php 7.2</option>
 								<option value="php7.3">php 7.3</option>
 							</select>
+						</div>
+					</div>
+					<div class="col-md-3" id="_node">
+						<div class="form-group">
+							<label for="port">Internal Port *</label>
+							<input type="text" id="port" name="port" class="form-control" required>
 						</div>
 					</div>
 					<div class="col-md-2">
@@ -126,6 +137,19 @@
 				});
 			}
 			$('input, select').on('change',makeConf);
+			$("#app").on('change', function(){
+				var app = $(this).val();
+				if(app.match(/wordpress|laravel|durpal|php/i)){
+					if($("#php").val()==''){$("#php").val('php7.1').change();}
+				}else{
+					$("#php").val('').change();
+				}
+				if(app=='node'){
+					$("#_node").show();$("#_php").hide();
+				}else{
+					$("#_node").hide();$("#_php").show();
+				}
+			});
 		</script>
 	</body>
 </html>
